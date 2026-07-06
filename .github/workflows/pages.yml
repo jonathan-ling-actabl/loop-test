@@ -26,10 +26,24 @@ jobs:
 
       - uses: actions/configure-pages@v5
 
-      # No build step — upload the repo root as the site.
+      # No build step. Copy the site into _site, excluding repo/meta files so
+      # only the actual pages are published. New apps under apps/ are included
+      # automatically.
+      - name: Assemble site
+        run: |
+          mkdir _site
+          rsync -a \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='.agents' \
+            --exclude='_site' \
+            --exclude='CLAUDE.md' \
+            --exclude='README.md' \
+            ./ _site/
+
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
 
       - id: deployment
         uses: actions/deploy-pages@v4
