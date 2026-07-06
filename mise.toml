@@ -1,0 +1,10 @@
+# mise config — https://mise.jdx.dev
+# Static site: no runtime dependencies. Tasks below serve it locally.
+
+[tasks.serve]
+description = "Serve the site at http://localhost:8000"
+run = "python3 -m http.server 8000"
+
+[tasks.open]
+description = "Open the served site in the default browser"
+run = "open http://localhost:8000"
