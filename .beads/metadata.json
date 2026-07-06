@@ -2,6 +2,6 @@
   "database": "dolt",
   "backend": "dolt",
   "dolt_mode": "embedded",
-  "dolt_database": "loop_test",
-  "project_id": "35c8c92f-ed23-46c0-8ced-450d41fdec94"
+  "dolt_database": "TST",
+  "project_id": "4b162e02-74c5-4cf3-a982-f67520ab330e"
 }
