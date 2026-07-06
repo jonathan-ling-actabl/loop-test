@@ -5,11 +5,18 @@
   --accent: #6ea8fe;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
   background: var(--bg);
   color: var(--fg);
   line-height: 1.5;
@@ -20,9 +27,15 @@ header {
   text-align: center;
 }
 
-h1 { margin: 0 0 0.25rem; font-size: 2rem; }
+h1 {
+  margin: 0 0 0.25rem;
+  font-size: 2rem;
+}
 
-.subtitle { margin: 0; color: var(--muted); }
+.subtitle {
+  margin: 0;
+  color: var(--muted);
+}
 
 main {
   max-width: 640px;
@@ -46,7 +59,9 @@ main {
   border-radius: 8px;
   color: var(--accent);
   text-decoration: none;
-  transition: border-color 0.15s, background 0.15s;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
 }
 
 .app-list a:hover {

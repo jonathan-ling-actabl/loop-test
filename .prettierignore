@@ -1,0 +1,10 @@
+node_modules
+pnpm-lock.yaml
+.beads
+.git
+.agents
+
+# Beads-managed files (contain a managed block with a content hash)
+CLAUDE.md
+AGENTS.md
+.claude

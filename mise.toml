@@ -1,5 +1,25 @@
 # mise config — https://mise.jdx.dev
-# Static site: no runtime dependencies. Tasks below serve it locally.
+# Static site with dev-only tooling (Prettier for formatting, Vitest for tests).
+
+[tools]
+node = "lts"
+pnpm = "latest"
+
+[tasks.install]
+description = "Install dev dependencies"
+run = "pnpm install"
+
+[tasks.lint]
+description = "Check formatting with Prettier"
+run = "pnpm exec prettier --check ."
+
+[tasks.format]
+description = "Fix formatting with Prettier"
+run = "pnpm exec prettier --write ."
+
+[tasks.test]
+description = "Run tests with Vitest"
+run = "pnpm exec vitest run"
 
 [tasks.serve]
 description = "Serve the site at http://localhost:8000"

@@ -1,0 +1,6 @@
+# Allow esbuild (a Vitest dependency) to run its install script to fetch its
+# native binary. Without this, pnpm blocks the build and Vitest can't run.
+allowBuilds:
+  esbuild: true
+onlyBuiltDependencies:
+  - esbuild

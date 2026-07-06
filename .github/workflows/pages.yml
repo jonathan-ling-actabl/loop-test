@@ -40,6 +40,15 @@ jobs:
             --exclude='_site' \
             --exclude='CLAUDE.md' \
             --exclude='README.md' \
+            --exclude='node_modules' \
+            --exclude='tests' \
+            --exclude='package.json' \
+            --exclude='pnpm-lock.yaml' \
+            --exclude='mise.toml' \
+            --exclude='vitest.config.js' \
+            --exclude='.prettierrc.json' \
+            --exclude='.prettierignore' \
+            --exclude='*.test.js' \
             ./ _site/
 
       - uses: actions/upload-pages-artifact@v3

@@ -1,4 +1,7 @@
 
+# Node / dev tooling
+node_modules/
+
 # Beads / Dolt files (added by bd init)
 .dolt/
 *.db

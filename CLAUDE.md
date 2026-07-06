@@ -37,11 +37,31 @@ apps/
   app's display name from the spec.
 - Implement the spec's core **User Stories** first. Bonus features are optional.
 - Keep it accessible: semantic HTML, labelled form controls, keyboard-usable.
+- Put an app's testable logic in functions that can be imported (e.g. `export`
+  from `script.js` or a sibling module) so it can be unit-tested.
+- Add tests as `apps/<app-name>/*.test.js`; keep them passing.
 
-## Testing a change
+## Tooling
+
+Dev tooling is managed with [mise](https://mise.jdx.dev) (Node LTS + pnpm) — it is
+dev-only; the site itself still runs by opening a file, with no build step.
+
+```
+mise install     # one-time: install Node + pnpm
+mise run install # install dev dependencies (pnpm)
+mise run lint     # Prettier formatting check
+mise run format   # fix formatting
+mise run test     # run Vitest (jsdom) tests
+```
+
+Before considering an app done, run `mise run lint` and `mise run test` and make
+sure both pass.
+
+## Running / testing a change
 
 Open `index.html` (or the app's `index.html`) directly in a browser, or serve the
-folder with `python3 -m http.server` and load `http://localhost:8000`.
+folder with `mise run serve` (or `python3 -m http.server`) and load
+`http://localhost:8000`.
 
 
 <!-- BEGIN BEADS INTEGRATION v:1 profile:minimal hash:6cd5cc61 -->
