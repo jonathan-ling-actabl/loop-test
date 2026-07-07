@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stopwatch</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <a class="back" href="../../index.html">&larr; Back</a>
+    <main>
+      <h1>Stopwatch</h1>
+      <p class="intro">Time an activity. Start, pause, resume, and record laps.</p>
+
+      <p id="display" class="display" role="timer" aria-live="off" aria-label="Elapsed time">
+        00:00:00.00
+      </p>
+
+      <div class="controls">
+        <button type="button" id="start-btn">Start</button>
+        <button type="button" id="stop-btn" disabled>Stop</button>
+        <button type="button" id="lap-btn" disabled>Lap</button>
+        <button type="button" id="reset-btn">Reset</button>
+        <button type="button" id="clear-laps-btn">Clear laps</button>
+      </div>
+
+      <ol id="lap-list" class="lap-list" aria-live="polite"></ol>
+    </main>
+    <script type="module" src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,107 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+  background: #0f1115;
+  color: #e6e6e6;
+  line-height: 1.5;
+}
+
+.back {
+  display: inline-block;
+  margin: 1rem;
+  color: #6ea8fe;
+  text-decoration: none;
+}
+
+main {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.intro {
+  color: #a9adb8;
+}
+
+.display {
+  margin: 1.5rem 0;
+  font-size: 3rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 1.5rem;
+}
+
+.controls button {
+  background: #171a21;
+  border: 1px solid #333a48;
+  border-radius: 0.35rem;
+  color: #e6e6e6;
+  padding: 0.55rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.controls button:hover:not(:disabled) {
+  border-color: #6ea8fe;
+}
+
+.controls button:focus-visible {
+  outline: 2px solid #6ea8fe;
+  outline-offset: 1px;
+}
+
+.controls button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+#start-btn {
+  background: #6ea8fe;
+  color: #0f1115;
+  border-color: #6ea8fe;
+}
+
+#start-btn:hover:not(:disabled) {
+  background: #8fbcff;
+}
+
+.lap-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.lap-list li {
+  display: flex;
+  justify-content: space-between;
+  background: #171a21;
+  border: 1px solid #262b36;
+  border-radius: 0.5rem;
+  padding: 0.6rem 1rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.lap-list li .lap-label {
+  color: #a9adb8;
+}
