@@ -1,0 +1,72 @@
+# gates.yaml — per-repo, versioned pre/post gate config.
+#
+# Same shape as PLAN_ITERATION_ONE.md §6, trimmed to the two stages the MVP
+# actually exercises. Consumed by the `gates` skill (.claude/skills/gates/)
+# on behalf of the gate-runner subagent (.claude/agents/gate-runner.md) — not
+# by any orchestrator process. Adding a new stage or check is a YAML edit,
+# nothing else.
+#
+# Contract per check: exit 0 = pass; non-zero exit = fail. The `gates` skill
+# captures stdout/stderr from a failing check as the "reason" reported back
+# to the gate-runner subagent.
+
+stages:
+  planning:
+    pre: []
+    post:
+      # Native check (see gates skill "Native checks") — verifies ticket-planner
+      # actually produced a spec + plan file for this ticket before dev starts.
+      - plan-lint
+    # If true, ticket-planner (via ticket-liaison) explicitly asks a human to
+    # approve the spec+plan before dev-stage work begins, and waits for a
+    # reply (bounded by ticket_comms.max_wait_minutes below). Default false
+    # for the MVP so the demo stays "zero manual actions except ticket
+    # creation and PR approval" (see MVP_PLAN.md's success criteria) — flip
+    # to true for a stricter human-gated planning stage (matches
+    # PLAN_ITERATION_ONE.md §5's PLANNING stage, which does wait for
+    # approval).
+    require_approval: false
+
+  dev:
+    pre:
+      # Checked before the ticket-implementer subagent is allowed to start;
+      # the `gates` skill knows how to evaluate this one natively (it isn't
+      # a mise task) — see SKILL.md "Native checks".
+      - worktree-provisioned
+    post:
+      # Run after ticket-implementer commits, before push/PR. Each of these
+      # maps 1:1 to `mise run <task>` in the demo repo's mise.toml.
+      - lint
+      - test
+    # Bounds on the implementer<->gate-runner ping-pong for this stage (see
+    # .claude/commands/work-ticket.md "Dev-stage ping-pong" and
+    # .claude/agents/gate-runner.md). Whichever limit is hit first stops the
+    # loop and escalates instead of retrying again.
+    budget:
+      max_attempts: 5        # implementer fix-up rounds after the first attempt
+      max_minutes: 20        # wall-clock cap for the whole dev-stage ping-pong
+      max_check_seconds: 300 # per-check timeout (e.g. a hung `mise run test`)
+
+  code_review:
+    pre:
+      # Native check: were the `dev` stage's post gates all green on the
+      # commit being proposed for review? (Prevents opening a PR for a
+      # commit that never actually passed gates, e.g. after a manual
+      # `git commit --amend`.)
+      - gates-passed
+    post: []
+    # Left empty deliberately for the MVP — see MVP_PLAN.md's cut list
+    # (CODE_REVIEW→QA→DEPLOY_APPROVAL→PROD_DEPLOY→MONITOR stages are
+    # post-hackathon). Day 2's stretch goal adds a coverage/secret-scan
+    # check here to prove "new stage = YAML + subagent, no new orchestrator
+    # code" live — see CLAUDE_MVP_PLAN.md Day 2 table.
+
+# Defaults for the "comment on the ticket and wait for a human reply" flow
+# (see .claude/agents/ticket-liaison.md and .claude/skills/ticket-comms/).
+# Not a "gate" in the pass/fail sense — this is a human-input pause point,
+# but it lives here because it's the same "per-repo, versioned automation
+# budget" concept as the gates above.
+ticket_comms:
+  backend: beads          # beads | jira — which CLI/API ticket-liaison talks to
+  max_wait_minutes: 240   # give up waiting for a reply after this long
+  poll_interval_minutes: 10  # how often to check for a reply while blocking-waiting
