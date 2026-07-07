@@ -10,8 +10,27 @@
     <a class="back" href="../../index.html">&larr; Back</a>
     <main>
       <h1>Countdown Timer</h1>
-      <p>Coming soon.</p>
+      <p class="intro">Count down to any event. Pre-filled below with the hackathon end.</p>
+
+      <form id="event-form" novalidate>
+        <div class="field">
+          <label for="event-name">Event name</label>
+          <input type="text" id="event-name" name="event-name" required />
+        </div>
+        <div class="field">
+          <label for="event-date">Date</label>
+          <input type="date" id="event-date" name="event-date" required />
+        </div>
+        <div class="field">
+          <label for="event-time">Time (optional, defaults to midnight)</label>
+          <input type="time" id="event-time" name="event-time" />
+        </div>
+        <p id="form-warning" class="warning" role="alert" aria-live="assertive"></p>
+        <button type="submit">Start</button>
+      </form>
+
+      <ul id="countdown-list" class="countdown-list" aria-live="polite"></ul>
     </main>
-    <script src="script.js" type="module"></script>
+    <script type="module" src="script.js"></script>
   </body>
 </html>
