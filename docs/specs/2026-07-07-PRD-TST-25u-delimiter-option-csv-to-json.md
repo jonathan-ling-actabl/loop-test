@@ -98,8 +98,8 @@ is now replaced by the selected delimiter.
   `parseCsv` helper and the field-quoting helper take the delimiter as an
   argument instead of assuming a comma.
 - **Quoting keyed off the delimiter**: the generate-side quoting predicate
-  changes from "contains comma, quote, CR, or newline" to "contains *the
-  selected delimiter*, quote, CR, or newline". Parsing recognizes the selected
+  changes from "contains comma, quote, CR, or newline" to "contains _the
+  selected delimiter_, quote, CR, or newline". Parsing recognizes the selected
   delimiter (rather than a literal comma) as the field boundary outside quotes.
 - **Single setting, both directions**: one delimiter selection drives both
   parse (Convert to JSON) and generate (Convert to CSV), read at conversion

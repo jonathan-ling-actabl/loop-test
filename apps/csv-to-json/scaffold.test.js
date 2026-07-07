@@ -33,4 +33,27 @@ describe("csv-to-json scaffold", () => {
     expect(document.querySelector('label[for="csv-input"]')).not.toBeNull();
     expect(document.querySelector('label[for="json-output"]')).not.toBeNull();
   });
+
+  it("provides a labelled delimiter select (TST-25u)", () => {
+    document.body.innerHTML = html;
+    const select = document.querySelector("#delimiter");
+    expect(select).not.toBeNull();
+    expect(select.tagName).toBe("SELECT");
+    expect(document.querySelector('label[for="delimiter"]')).not.toBeNull();
+  });
+
+  it("offers Comma, Tab, Semicolon, Pipe, and Colon delimiter presets (TST-25u)", () => {
+    document.body.innerHTML = html;
+    const values = Array.from(document.querySelectorAll("#delimiter option")).map((o) => o.value);
+    expect(values).toEqual([",", "\t", ";", "|", ":"]);
+  });
+
+  it("defaults the delimiter to Comma (TST-25u)", () => {
+    document.body.innerHTML = html;
+    const select = document.querySelector("#delimiter");
+    expect(select.value).toBe(",");
+    const selected = document.querySelector("#delimiter option[selected]");
+    expect(selected).not.toBeNull();
+    expect(selected.value).toBe(",");
+  });
 });

@@ -20,10 +20,10 @@ Durable decisions that apply across all phases:
   trailing delimiter parameter that defaults to `","`:
   - `csvToJson(text, delimiter = ",")`
   - `jsonToCsv(text, delimiter = ",")`
-  Calling them without the argument reproduces current behavior exactly, so the
-  existing TST-833 tests remain valid unchanged. Internal parse and
-  field-quoting helpers take the delimiter as an argument rather than assuming a
-  comma.
+    Calling them without the argument reproduces current behavior exactly, so the
+    existing TST-833 tests remain valid unchanged. Internal parse and
+    field-quoting helpers take the delimiter as an argument rather than assuming a
+    comma.
 - **Quoting rule keyed off the delimiter**: on generation, a field is quoted
   when it contains the selected delimiter, a double quote, a CR, or a newline
   (embedded quotes doubled). On parsing, the selected delimiter — not a literal
