@@ -6,8 +6,8 @@
 ## Problem Statement
 
 A user of the loop-test app collection wants to track how long they spend on an
-activity. Today the site offers a countdown timer (count *down* to a fixed
-future instant) but nothing that counts *up* from a moment the user chooses.
+activity. Today the site offers a countdown timer (count _down_ to a fixed
+future instant) but nothing that counts _up_ from a moment the user chooses.
 There is no way to measure elapsed time, pause and resume that measurement, or
 record intermediate split ("lap") times.
 
@@ -101,7 +101,7 @@ Non-functional (implied by repo conventions in CLAUDE.md):
   the state via the pure helpers — mirroring `initApp()` in the countdown
   timer.
 - **Elapsed-time accuracy**: elapsed = `accumulatedMs + (running ? now -
-  startedAt : 0)`, so pausing banks the delta into `accumulatedMs` and the
+startedAt : 0)`, so pausing banks the delta into `accumulatedMs` and the
   interval only drives rendering, never the source of truth (per Requirement
   10). Timestamps come from `Date.now()`.
 - **No persistence**: unlike the countdown timer, the stopwatch does not use
