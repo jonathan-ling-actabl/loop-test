@@ -72,6 +72,25 @@ main {
   outline-offset: 1px;
 }
 
+.delimiter {
+  margin-top: 1rem;
+  max-width: 16rem;
+}
+
+.delimiter select {
+  background: #0f1115;
+  border: 1px solid #333a48;
+  border-radius: 0.35rem;
+  color: #e6e6e6;
+  padding: 0.5rem 0.6rem;
+  font-size: 0.95rem;
+}
+
+.delimiter select:focus-visible {
+  outline: 2px solid #6ea8fe;
+  outline-offset: 1px;
+}
+
 .warning {
   margin: 0.75rem 0;
   min-height: 1.2em;

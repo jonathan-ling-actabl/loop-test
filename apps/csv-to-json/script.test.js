@@ -165,3 +165,98 @@ describe("round-trip stability", () => {
     expect(back.value).toBe(csv);
   });
 });
+
+describe("csvToJson with a custom delimiter (TST-25u)", () => {
+  it("splits fields on a tab delimiter", () => {
+    const result = csvToJson("name\tage\nAda\t36\nGrace\t45", "\t");
+    expect(result.ok).toBe(true);
+    expect(JSON.parse(result.value)).toEqual([
+      { name: "Ada", age: "36" },
+      { name: "Grace", age: "45" },
+    ]);
+  });
+
+  it("splits fields on a pipe delimiter", () => {
+    const result = csvToJson("name|age\nAda|36", "|");
+    expect(result.ok).toBe(true);
+    expect(JSON.parse(result.value)).toEqual([{ name: "Ada", age: "36" }]);
+  });
+
+  it("splits fields on a semicolon delimiter", () => {
+    const result = csvToJson("name;age\nAda;36", ";");
+    expect(result.ok).toBe(true);
+    expect(JSON.parse(result.value)).toEqual([{ name: "Ada", age: "36" }]);
+  });
+
+  it("splits fields on a colon delimiter", () => {
+    const result = csvToJson("name:age\nAda:36", ":");
+    expect(result.ok).toBe(true);
+    expect(JSON.parse(result.value)).toEqual([{ name: "Ada", age: "36" }]);
+  });
+
+  it("does not split on commas when a non-comma delimiter is selected", () => {
+    const result = csvToJson("name|note\nAda|Lovelace, first programmer", "|");
+    expect(result.ok).toBe(true);
+    expect(JSON.parse(result.value)).toEqual([{ name: "Ada", note: "Lovelace, first programmer" }]);
+  });
+
+  it("parses a quoted field containing the selected delimiter as one value", () => {
+    const result = csvToJson('name\tnote\nAda\t"Lovelace\tfirst programmer"', "\t");
+    expect(result.ok).toBe(true);
+    expect(JSON.parse(result.value)).toEqual([{ name: "Ada", note: "Lovelace\tfirst programmer" }]);
+  });
+
+  it("parses a quoted field containing a pipe delimiter as one value", () => {
+    const result = csvToJson('name|note\nAda|"a|b|c"', "|");
+    expect(result.ok).toBe(true);
+    expect(JSON.parse(result.value)).toEqual([{ name: "Ada", note: "a|b|c" }]);
+  });
+});
+
+describe("jsonToCsv with a custom delimiter (TST-25u)", () => {
+  it("separates fields with a tab delimiter", () => {
+    const result = jsonToCsv('[{"name":"Ada","age":"36"},{"name":"Grace","age":"45"}]', "\t");
+    expect(result.ok).toBe(true);
+    expect(result.value).toBe("name\tage\nAda\t36\nGrace\t45");
+  });
+
+  it("separates fields with a pipe delimiter", () => {
+    const result = jsonToCsv('[{"name":"Ada","age":"36"}]', "|");
+    expect(result.ok).toBe(true);
+    expect(result.value).toBe("name|age\nAda|36");
+  });
+
+  it("quotes a field containing the selected delimiter, not a comma", () => {
+    const result = jsonToCsv('[{"note":"a|b","plain":"x,y"}]', "|");
+    expect(result.ok).toBe(true);
+    // "a|b" contains the pipe so it is quoted; "x,y" contains only a comma
+    // (not the delimiter) so it stays unquoted.
+    expect(result.value).toBe('note|plain\n"a|b"|x,y');
+  });
+
+  it("quotes a field containing a tab delimiter and doubles embedded quotes", () => {
+    const result = jsonToCsv('[{"v":"a\\tb","q":"say \\"hi\\""}]', "\t");
+    expect(result.ok).toBe(true);
+    expect(result.value).toBe('v\tq\n"a\tb"\t"say ""hi"""');
+  });
+});
+
+describe("custom-delimiter round-trip stability (TST-25u)", () => {
+  it("delimited text -> JSON -> delimited text is stable with a pipe delimiter", () => {
+    const src = 'name|note\nAda|"Lovelace|first"\nGrace|Hopper';
+    const json = csvToJson(src, "|");
+    expect(json.ok).toBe(true);
+    const back = jsonToCsv(json.value, "|");
+    expect(back.ok).toBe(true);
+    expect(back.value).toBe(src);
+  });
+
+  it("delimited text -> JSON -> delimited text is stable with a tab delimiter", () => {
+    const src = "name\tage\nAda\t36\nGrace\t45";
+    const json = csvToJson(src, "\t");
+    expect(json.ok).toBe(true);
+    const back = jsonToCsv(json.value, "\t");
+    expect(back.ok).toBe(true);
+    expect(back.value).toBe(src);
+  });
+});

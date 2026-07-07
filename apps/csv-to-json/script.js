@@ -8,11 +8,12 @@
 
 // --- CSV parsing (RFC-4180 style) -----------------------------------------
 
-// Splits a full CSV document into an array of rows, where each row is an array
-// of string field values. Handles fields wrapped in double quotes that contain
-// commas, newlines, or doubled ("") quotes. Returns { ok, rows } or
-// { ok: false, error }.
-function parseCsv(text) {
+// Splits a full delimited-text document into an array of rows, where each row
+// is an array of string field values. The field separator is the given
+// `delimiter` (defaulting to a comma). Handles fields wrapped in double quotes
+// that contain the delimiter, newlines, or doubled ("") quotes. Returns
+// { ok, rows } or { ok: false, error }.
+function parseCsv(text, delimiter = ",") {
   const rows = [];
   let field = "";
   let row = [];
@@ -64,7 +65,7 @@ function parseCsv(text) {
       continue;
     }
 
-    if (char === ",") {
+    if (char === delimiter) {
       row.push(field);
       field = "";
       rowHasContent = true;
@@ -103,11 +104,12 @@ function parseCsv(text) {
 
 // --- CSV field generation --------------------------------------------------
 
-// Quotes a single field for CSV output when it contains a comma, double quote,
-// carriage return, or newline (RFC-4180 style). Embedded quotes are doubled.
-function quoteCsvField(value) {
+// Quotes a single field for output when it contains the selected `delimiter`,
+// a double quote, carriage return, or newline (RFC-4180 style). Embedded quotes
+// are doubled. The delimiter defaults to a comma.
+function quoteCsvField(value, delimiter = ",") {
   const str = String(value);
-  if (/[",\r\n]/.test(str)) {
+  if (str.includes(delimiter) || /["\r\n]/.test(str)) {
     return `"${str.replace(/"/g, '""')}"`;
   }
   return str;
@@ -115,14 +117,16 @@ function quoteCsvField(value) {
 
 // --- Public API ------------------------------------------------------------
 
-// Converts CSV text into a JSON string (a pretty-printed array of objects
-// keyed by the header row). Returns { ok: true, value } or { ok: false, error }.
-export function csvToJson(csvText) {
+// Converts delimited text into a JSON string (a pretty-printed array of objects
+// keyed by the header row). The field separator is the given `delimiter`
+// (defaulting to a comma, which reproduces the original behavior). Returns
+// { ok: true, value } or { ok: false, error }.
+export function csvToJson(csvText, delimiter = ",") {
   if (csvText == null || csvText.trim() === "") {
     return { ok: false, error: "Please paste some CSV to convert." };
   }
 
-  const parsed = parseCsv(csvText);
+  const parsed = parseCsv(csvText, delimiter);
   if (!parsed.ok) {
     return parsed;
   }
@@ -156,10 +160,11 @@ export function csvToJson(csvText) {
   return { ok: true, value: JSON.stringify(objects, null, 2) };
 }
 
-// Converts JSON text (a single object or an array of flat objects) into CSV
-// text. The header is the union of keys in first-seen order; one row per
-// object. Returns { ok: true, value } or { ok: false, error }.
-export function jsonToCsv(jsonText) {
+// Converts JSON text (a single object or an array of flat objects) into
+// delimited text. The header is the union of keys in first-seen order; one row
+// per object. Fields are separated by the given `delimiter` (defaulting to a
+// comma). Returns { ok: true, value } or { ok: false, error }.
+export function jsonToCsv(jsonText, delimiter = ",") {
   if (jsonText == null || jsonText.trim() === "") {
     return { ok: false, error: "Please paste some JSON to convert." };
   }
@@ -215,9 +220,11 @@ export function jsonToCsv(jsonText) {
     return String(value);
   };
 
-  const lines = [header.map(quoteCsvField).join(",")];
+  const lines = [header.map((h) => quoteCsvField(h, delimiter)).join(delimiter)];
   for (const record of records) {
-    const line = header.map((key) => quoteCsvField(cellToString(record[key]))).join(",");
+    const line = header
+      .map((key) => quoteCsvField(cellToString(record[key]), delimiter))
+      .join(delimiter);
     lines.push(line);
   }
 
@@ -233,9 +240,16 @@ function initApp() {
   const toJsonBtn = document.getElementById("to-json");
   const toCsvBtn = document.getElementById("to-csv");
   const clearBtn = document.getElementById("clear");
+  const delimiterSelect = document.getElementById("delimiter");
 
   if (!csvBox || !jsonBox || !warningEl || !toJsonBtn || !toCsvBtn || !clearBtn) {
     return;
+  }
+
+  // Reads the currently selected delimiter at conversion time. Falls back to a
+  // comma when the control is somehow absent.
+  function currentDelimiter() {
+    return delimiterSelect ? delimiterSelect.value : ",";
   }
 
   function showWarning(message) {
@@ -248,7 +262,7 @@ function initApp() {
 
   toJsonBtn.addEventListener("click", () => {
     clearWarning();
-    const result = csvToJson(csvBox.value);
+    const result = csvToJson(csvBox.value, currentDelimiter());
     if (result.ok) {
       jsonBox.value = result.value;
     } else {
@@ -258,7 +272,7 @@ function initApp() {
 
   toCsvBtn.addEventListener("click", () => {
     clearWarning();
-    const result = jsonToCsv(jsonBox.value);
+    const result = jsonToCsv(jsonBox.value, currentDelimiter());
     if (result.ok) {
       csvBox.value = result.value;
     } else {
