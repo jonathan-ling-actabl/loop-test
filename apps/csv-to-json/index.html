@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSV to JSON</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <a class="back" href="../../index.html">&larr; Back</a>
+    <main>
+      <h1>CSV to JSON</h1>
+      <p class="intro">
+        Paste CSV to convert it into JSON objects, or paste JSON to convert it back to CSV.
+      </p>
+
+      <div class="converter">
+        <div class="field">
+          <label for="csv-input">CSV</label>
+          <textarea
+            id="csv-input"
+            name="csv-input"
+            rows="12"
+            spellcheck="false"
+            placeholder="name,age&#10;Ada,36&#10;Grace,45"
+          ></textarea>
+        </div>
+
+        <div class="field">
+          <label for="json-output">JSON</label>
+          <textarea
+            id="json-output"
+            name="json-output"
+            rows="12"
+            spellcheck="false"
+            placeholder='[&#10;  { "name": "Ada", "age": "36" }&#10;]'
+          ></textarea>
+        </div>
+      </div>
+
+      <p id="warning" class="warning" role="alert" aria-live="assertive"></p>
+
+      <div class="controls">
+        <button type="button" id="to-json">Convert to JSON &rarr;</button>
+        <button type="button" id="to-csv">&larr; Convert to CSV</button>
+        <button type="button" id="clear" class="secondary">Clear</button>
+      </div>
+    </main>
+    <script type="module" src="script.js"></script>
+  </body>
+</html>
