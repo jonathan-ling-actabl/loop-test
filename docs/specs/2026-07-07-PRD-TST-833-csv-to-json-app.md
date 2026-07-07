@@ -111,8 +111,8 @@ Requirements are written in EARS format.
     string or an error message; does not throw for invalid input.
   - Internal helpers for RFC-4180-style parsing (splitting a CSV line into
     fields respecting quotes) and for quoting a field when generating CSV.
-  These are "deep modules": a simple string-in / result-out interface hiding
-  the parsing details, with a stable contract.
+    These are "deep modules": a simple string-in / result-out interface hiding
+    the parsing details, with a stable contract.
 - **DOM wiring**: `script.js` reads the two `<textarea>` elements and the
   buttons, calls the pure functions on click, writes results back, and renders
   warnings into a dedicated `role="alert"` / `aria-live` element. The wiring
